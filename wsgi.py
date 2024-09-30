@@ -86,15 +86,20 @@ def view_jobs_command():
 def view_applicants_command():
 
     job_id = int(input("Enter the job ID you want to search for: "))
+    user_id = int(input("Enter your user ID: "))
 
-    applicants = view_all_applicants(job_id)
+    applicants = view_all_applicants(job_id, user_id)
     if applicants:
-
-        for app in applicants:
-            print("------------------------")
-            print(f"Applicant Name: {app.username}")
-            print(f"Applicant ID : {app.id}")
-            
+        if isinstance(applicants, str):
+            print(applicants)
+        else:
+            for app in applicants:
+                if isinstance(app, str):
+                    print(app)
+                else:
+                    print("------------------------")
+                    print(f"Applicant Name: {app.username}")
+                    print(f"Applicant ID : {app.id}")  
     else:
         print ("No Applicants are currently available!")
 

@@ -21,15 +21,18 @@ def view_all_jobs():
     jobs = Job.query.all()
     return jobs
 
-def view_all_applicants(job_id):
+def view_all_applicants(job_id, user_id):
     #applicants = Applicant.query.all()
     tempJob = Job.query.get(job_id)
 
     if tempJob:
-        applicants = [a.user for a in tempJob.applications]
-        return applicants
+        if tempJob.applicant_id == user_id:
+            applicants = [a.user for a in tempJob.applications]
+            return applicants
+        else:
+            return ["You can only view job applicants for jobs you posted!"]
     else:
-        return None
+        return ["Job not found!"]
 
 def apply_to_job(applicant_id, job_id):
 
