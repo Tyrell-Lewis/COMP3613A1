@@ -60,8 +60,8 @@ job_cli = AppGroup('job', help='Job object commands')
 @click.argument("requirements", default="Literally nothing")
 @click.argument("applicant_id", default=1)
 def create_job_command(name, description, requirements, applicant_id):
-    create_job(name, description, requirements, applicant_id)
-    print(f'{name} has succesfully been listed!')
+    result = create_job(name, description, requirements, applicant_id)
+    print(result)
 
 
 
@@ -76,26 +76,27 @@ def view_jobs_command():
             print(f"Job title: {job.name}")
             print(f"Job description: {job.description}")
             print(f"Job requirements: {job.requirements}")
-            print(f"Applicant ID : {job.applicant_id}")
+            print(f"Posted By Applicant ID : {job.applicant_id}")
             print(f"Job ID : {job.id}")
             print("------------------------")
     else:
         print ("No Jobs are currently listed!")
 
 @job_cli.command("viewapp", help="Views all jobs!")
-def view_applicantss_command():
-    applicants = view_all_applicants()
+def view_applicants_command():
+
+    job_id = int(input("Enter the job ID you want to search for: "))
+
+    applicants = view_all_applicants(job_id)
     if applicants:
 
         for app in applicants:
-            print(f"Job title: {job.name}")
-            print(f"Job description: {job.description}")
-            print(f"Job requirements: {job.requirements}")
-            print(f"Applicant ID : {job.applicant_id}")
-            print(f"Job ID : {job.id}")
             print("------------------------")
+            print(f"Applicant Name: {app.username}")
+            print(f"Applicant ID : {app.id}")
+            
     else:
-        print ("No Jobs are currently listed!")
+        print ("No Applicants are currently available!")
 
 
 @job_cli.command("apply", help="Applies to a job!")

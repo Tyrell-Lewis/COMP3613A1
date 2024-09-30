@@ -6,19 +6,30 @@ from App.database import db
 
 def create_job(name, requirements, description, applicant_id):
 
-    new_job= Job(name=name, requirements=requirements, description=description, applicant_id=applicant_id)
+    tempUser = User.query.get(applicant_id)
 
-    db.session.add(new_job)
-    db.session.commit()
-    return new_job
+    if tempUser:
+        new_job= Job(name=name, requirements=requirements, description=description, applicant_id=applicant_id)
+
+        db.session.add(new_job)
+        db.session.commit()
+        return (f'{name} has succesfully been listed!')
+    else:
+        return ("Invalid User ID was entered!")
 
 def view_all_jobs():
     jobs = Job.query.all()
     return jobs
 
-def view_all_applicants():
-    applicants = Applicant.query.all()
-    return applicants
+def view_all_applicants(job_id):
+    #applicants = Applicant.query.all()
+    tempJob = Job.query.get(job_id)
+
+    if tempJob:
+        applicants = [a.user for a in tempJob.applications]
+        return applicants
+    else:
+        return None
 
 def apply_to_job(applicant_id, job_id):
 
