@@ -60,6 +60,7 @@ job_cli = AppGroup('job', help='Job object commands')
 @click.argument("requirements", default="Literally nothing")
 @click.argument("applicant_id", default=1)
 def create_job_command(name, description, requirements, applicant_id):
+    
     result = create_job(name, description, requirements, applicant_id)
     print(result)
 
@@ -82,7 +83,7 @@ def view_jobs_command():
     else:
         print ("No Jobs are currently listed!")
 
-@job_cli.command("viewapp", help="Views all jobs!")
+@job_cli.command("applicants", help="Views Applicants for specified Jobs!")
 def view_applicants_command():
 
     job_id = int(input("Enter the job ID you want to search for: "))
@@ -90,6 +91,8 @@ def view_applicants_command():
 
     applicants = view_all_applicants(job_id, user_id)
     if applicants:
+        print("List of curent Applicants: ")
+
         if isinstance(applicants, str):
             print(applicants)
         else:
@@ -106,8 +109,9 @@ def view_applicants_command():
 
 @job_cli.command("apply", help="Applies to a job!")
 def apply_to_job_command():
-    applicant_id = int(input("Enter your applicant ID: "))
     job_id = int(input("Enter the job ID you want to apply to: "))
+    applicant_id = int(input("Enter your applicant ID: "))
+    
 
     # print (applicant_id)
     # print(job_id)
