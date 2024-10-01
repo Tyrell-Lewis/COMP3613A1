@@ -1,3 +1,152 @@
+```python
+
+job_cli = AppGroup('job', help='Job object commands')
+
+This command creates a job by the user inputting the job title, description, requirements and their own user ID.
+
+@job_cli.command("create", help="Creates a job listing!")
+@click.argument("name", default="Peasant")
+@click.argument("description", default="Its a peasant.... not much else tbh")
+@click.argument("requirements", default="Literally nothing")
+@click.argument("user_id", default=1)
+def create_job_command(name, description, requirements, user_id):
+    
+    result = create_job(name, description, requirements, user_id)
+    print(result)
+
+
+This command lists/views all the jobs which are currently listed.
+
+@job_cli.command("view", help="Views all jobs!")
+def view_jobs_command():
+    jobs = view_all_jobs()
+
+    if jobs:
+
+        for job in jobs:
+            print(f"Job Title: {job.title}")
+            print(f"Job Description: {job.description}")
+            print(f"Job Requirements: {job.requirements}")
+            print(f"Posted By User ID : {job.user_id}")
+            print(f"Job ID : {job.id}")
+            print(f"Job posted at : {job.posted_date}")
+            print("------------------------")
+    else:
+        print ("No Jobs are currently listed!")
+
+
+This command allows the user to input the specific job ID and their User ID to view the applicants of jobs which they themselves have posted.
+
+@job_cli.command("applicants", help="Views Applicants for specified Jobs!")
+def view_applicants_command():
+
+    job_id = (input("Enter the job ID you want to search for: "))
+
+
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+
+    user = User.query.filter_by(username=username).first()
+    user_id = None
+
+    if user and user.check_password(password):
+        print("Login successful!")
+        
+        user_id = user.id
+        
+
+        while not job_id:
+            job_id = (input("Enter the Job ID you want to apply to: "))
+
+        if job_id:
+
+            job_id= int(job_id)
+            
+
+            if user_id:
+
+               
+
+                applicants = view_all_applicants(job_id, user_id)
+
+                if applicants:
+                    print("------------------------")
+                    print("List of curent Applicants: ")
+
+                    if isinstance(applicants, str):
+                        print(applicants)
+                    else:
+                        for app in applicants:
+                            if isinstance(app, str):
+                                print(app)
+                            else:
+                                print("------------------------")
+                                print(f"Applicant Name: {app.username}")
+                                print(f"Applicant ID : {app.id}")  
+                else:
+                    print ("No Applicants are currently available!")
+            else:
+                ("Please provide your User ID!")
+        else:
+            ("Please provide the Job ID!")
+    else:
+         print("Invalid username or password!")
+
+
+This command allows for a user to apply for a job, as long as it has a valid job ID, they provide their valid user ID, and the job is not one which they themselves have listed.
+
+@job_cli.command("apply", help="Applies to a job!")
+def apply_to_job_command():
+    job_id = (input("Enter the Job ID you want to apply to: "))
+
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+
+    user = User.query.filter_by(username=username).first()
+
+    user_id = None
+
+    if user and user.check_password(password):
+        print("Login successful!")
+        
+        user_id = user.id
+        
+
+        while not job_id:
+            job_id = (input("Enter the Job ID you want to apply to: "))
+
+        if job_id:
+
+            job_id= int(job_id)
+            
+            if user_id:
+
+                
+                resume = str(input("Submit your resume here: "))
+
+                if resume:
+                    result = apply_to_job(user_id, job_id, resume)
+                    print("------------------------")
+                    print(result)
+                else:
+                    print("Please submit your resume!")
+            else:
+                print("Please provide your User ID!")
+        else:
+            print("Please provide the Job ID!")
+    else:
+         print("Invalid username or password!")
+
+app.cli.add_command(job_cli)
+```
+
+
+
+
+
+
+
+
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Tyrell-Lewis/COMP3613A1.git)
 <a href="https://render.com/deploy?repo=https://github.com/uwidcit/flaskmvc">
   <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
