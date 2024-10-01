@@ -50,21 +50,17 @@ def list_user_command(format):
 app.cli.add_command(user_cli) # add the group to the cli
 
 
-
-
 job_cli = AppGroup('job', help='Job object commands')
 
 @job_cli.command("create", help="Creates a job listing!")
 @click.argument("name", default="Peasant")
 @click.argument("description", default="Its a peasant.... not much else tbh")
 @click.argument("requirements", default="Literally nothing")
-@click.argument("applicant_id", default=1)
-def create_job_command(name, description, requirements, applicant_id):
+@click.argument("user_id", default=1)
+def create_job_command(name, description, requirements, user_id):
     
-    result = create_job(name, description, requirements, applicant_id)
+    result = create_job(name, description, requirements, user_id)
     print(result)
-
-
 
 
 @job_cli.command("view", help="Views all jobs!")
@@ -74,11 +70,12 @@ def view_jobs_command():
     if jobs:
 
         for job in jobs:
-            print(f"Job title: {job.name}")
-            print(f"Job description: {job.description}")
-            print(f"Job requirements: {job.requirements}")
-            print(f"Posted By Applicant ID : {job.applicant_id}")
+            print(f"Job Title: {job.title}")
+            print(f"Job Description: {job.description}")
+            print(f"Job Requirements: {job.requirements}")
+            print(f"Posted By User ID : {job.user_id}")
             print(f"Job ID : {job.id}")
+            print(f"Job posted at : {job.posted_date}")
             print("------------------------")
     else:
         print ("No Jobs are currently listed!")
@@ -86,38 +83,78 @@ def view_jobs_command():
 @job_cli.command("applicants", help="Views Applicants for specified Jobs!")
 def view_applicants_command():
 
-    job_id = int(input("Enter the job ID you want to search for: "))
-    user_id = int(input("Enter your user ID: "))
+    job_id = (input("Enter the job ID you want to search for: "))
+    
 
-    applicants = view_all_applicants(job_id, user_id)
-    if applicants:
-        print("List of curent Applicants: ")
+    while not job_id:
+        job_id = (input("Enter the Job ID you want to apply to: "))
 
-        if isinstance(applicants, str):
-            print(applicants)
-        else:
-            for app in applicants:
-                if isinstance(app, str):
-                    print(app)
+    if job_id:
+
+        job_id= int(job_id)
+        user_id = (input("Enter your User ID: "))
+
+        while not user_id:
+            user_id = (input("Enter your User ID: "))
+
+        if user_id:
+
+            user_id= int(user_id)
+            applicants = view_all_applicants(job_id, user_id)
+
+            if applicants:
+                print("------------------------")
+                print("List of curent Applicants: ")
+
+                if isinstance(applicants, str):
+                    print(applicants)
                 else:
-                    print("------------------------")
-                    print(f"Applicant Name: {app.username}")
-                    print(f"Applicant ID : {app.id}")  
+                    for app in applicants:
+                        if isinstance(app, str):
+                            print(app)
+                        else:
+                            print("------------------------")
+                            print(f"Applicant Name: {app.username}")
+                            print(f"Applicant ID : {app.id}")  
+            else:
+                print ("No Applicants are currently available!")
+        else:
+            ("Please provide your User ID!")
     else:
-        print ("No Applicants are currently available!")
+        ("Please provide the Job ID!")
 
 
 @job_cli.command("apply", help="Applies to a job!")
 def apply_to_job_command():
-    job_id = int(input("Enter the job ID you want to apply to: "))
-    applicant_id = int(input("Enter your applicant ID: "))
+    job_id = (input("Enter the Job ID you want to apply to: "))
     
 
-    # print (applicant_id)
-    # print(job_id)
+    while not job_id:
+        job_id = (input("Enter the Job ID you want to apply to: "))
 
-    result = apply_to_job(applicant_id, job_id)
-    print(result)
+    if job_id:
+
+        job_id= int(job_id)
+        user_id = (input("Enter your User ID: "))
+
+        while not user_id:
+            user_id = (input("Enter your User ID: "))
+
+        if user_id:
+
+            user_id= int(user_id)
+            resume = str(input("Submit your resume here: "))
+
+            if resume:
+                result = apply_to_job(user_id, job_id, resume)
+                print("------------------------")
+                print(result)
+            else:
+                print("Please submit your resume!")
+        else:
+            print("Please provide your User ID!")
+    else:
+        print("Please provide the Job ID!")
 
 app.cli.add_command(job_cli)
 
