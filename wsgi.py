@@ -84,77 +84,103 @@ def view_jobs_command():
 def view_applicants_command():
 
     job_id = (input("Enter the job ID you want to search for: "))
+
+
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+
+    user = User.query.filter_by(username=username).first()
+    user_id = None
+
+    if user and user.check_password(password):
+        print("Login successful!")
+        
+        user_id = user.id
+        
+
+        while not job_id:
+            job_id = (input("Enter the Job ID you want to apply to: "))
+
+        if job_id:
+
+            job_id= int(job_id)
+            
+
+            if user_id:
+
+               
+
+                applicants = view_all_applicants(job_id, user_id)
+
+                if applicants:
+                    print("------------------------")
+                    print("List of curent Applicants: ")
+
+                    if isinstance(applicants, str):
+                        print(applicants)
+                    else:
+                        for app in applicants:
+                            if isinstance(app, str):
+                                print(app)
+                            else:
+                                print("------------------------")
+                                print(f"Applicant Name: {app.username}")
+                                print(f"Applicant ID : {app.id}")  
+                else:
+                    print ("No Applicants are currently available!")
+            else:
+                ("Please provide your User ID!")
+        else:
+            ("Please provide the Job ID!")
+    else:
+         print("Invalid username or password!")
     
 
-    while not job_id:
-        job_id = (input("Enter the Job ID you want to apply to: "))
-
-    if job_id:
-
-        job_id= int(job_id)
-        user_id = (input("Enter your User ID: "))
-
-        while not user_id:
-            user_id = (input("Enter your User ID: "))
-
-        if user_id:
-
-            user_id= int(user_id)
-            applicants = view_all_applicants(job_id, user_id)
-
-            if applicants:
-                print("------------------------")
-                print("List of curent Applicants: ")
-
-                if isinstance(applicants, str):
-                    print(applicants)
-                else:
-                    for app in applicants:
-                        if isinstance(app, str):
-                            print(app)
-                        else:
-                            print("------------------------")
-                            print(f"Applicant Name: {app.username}")
-                            print(f"Applicant ID : {app.id}")  
-            else:
-                print ("No Applicants are currently available!")
-        else:
-            ("Please provide your User ID!")
-    else:
-        ("Please provide the Job ID!")
+    
 
 
 @job_cli.command("apply", help="Applies to a job!")
 def apply_to_job_command():
     job_id = (input("Enter the Job ID you want to apply to: "))
-    
 
-    while not job_id:
-        job_id = (input("Enter the Job ID you want to apply to: "))
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
 
-    if job_id:
+    user = User.query.filter_by(username=username).first()
 
-        job_id= int(job_id)
-        user_id = (input("Enter your User ID: "))
+    user_id = None
 
-        while not user_id:
-            user_id = (input("Enter your User ID: "))
+    if user and user.check_password(password):
+        print("Login successful!")
+        
+        user_id = user.id
+        
 
-        if user_id:
+        while not job_id:
+            job_id = (input("Enter the Job ID you want to apply to: "))
 
-            user_id= int(user_id)
-            resume = str(input("Submit your resume here: "))
+        if job_id:
 
-            if resume:
-                result = apply_to_job(user_id, job_id, resume)
-                print("------------------------")
-                print(result)
+            job_id= int(job_id)
+            
+            if user_id:
+
+                
+                resume = str(input("Submit your resume here: "))
+
+                if resume:
+                    result = apply_to_job(user_id, job_id, resume)
+                    print("------------------------")
+                    print(result)
+                else:
+                    print("Please submit your resume!")
             else:
-                print("Please submit your resume!")
+                print("Please provide your User ID!")
         else:
-            print("Please provide your User ID!")
+            print("Please provide the Job ID!")
     else:
-        print("Please provide the Job ID!")
+         print("Invalid username or password!")
+    
 
 app.cli.add_command(job_cli)
 
