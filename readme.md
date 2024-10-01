@@ -1,3 +1,6 @@
+#User bob with password: bobpass creates 1st job and the default job create command, for easier testing.
+
+
 ```python
 
 job_cli = AppGroup('job', help='Job object commands')
