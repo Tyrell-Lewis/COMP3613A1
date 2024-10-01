@@ -10,7 +10,7 @@ def initialize():
     create_user('shane', 'shanepass')
     create_user('mary', 'marypass')
     create_user('gomez', 'gomezpass')
-    create_job('king', "rules over peasants", "royalty", 2)
-    create_job('knight', "protects the king", "swordmanship", 3)
-    create_job('baker', "bakes bread, maybe cake", "does not burn bread", 4)
+    create_job('king', "rules over peasants", "royalty", 1)
+    create_job('knight', "protects the king", "swordmanship", 2)
+    create_job('baker', "bakes bread, maybe cake", "does not burn bread", 3)
     
